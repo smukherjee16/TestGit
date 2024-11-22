@@ -1,0 +1,22 @@
+name: Validate PR Title
+
+on:
+  pull_request:
+    types: [opened, edited, reopened]
+
+jobs:
+  validate-title:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate PR title
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          echo "Validating PR Title: $PR_TITLE"
+
+          # Regular expression to match [PROJECT-123] Short Description
+          if [[ ! "$PR_TITLE" =~ ^\[PROJECT-[0-9]+\]\ .+ ]]; then
+            echo "Error: Invalid PR title. Please follow '[PROJECT-123] Short Description' format."
+            exit 1
+          fi
+          echo "PR title is valid!"
